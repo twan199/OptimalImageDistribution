@@ -2,7 +2,7 @@ import algo
 
 
 def main():
-    algo.get_images()
+    algo.run()
 
 
 if __name__ == "__main__":
