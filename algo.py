@@ -13,4 +13,5 @@ def run():
 
 def get_images():
     listofimages = glob.glob("images/*")
+    listofimages.sort()
     return listofimages

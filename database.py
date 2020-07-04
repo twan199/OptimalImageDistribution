@@ -6,20 +6,12 @@ def create_database(conn):
     # Create table
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS images
-                (currency text, setnr real, size_length real, size_width real, filename text)'''
+                (currency text, setnr integer, size_length real, size_width real, filename text)'''
               )
     conn.commit()
 
 
-def add_values(conn, new_images):
-    c = conn.cursor()
-    c.executemany("INSERT INTO images VALUES (?,?,?,?,?)", new_images)
-    conn.commit()
-    conn.close()
-
-
-def add_to_db(conn, listoffiles):
-    listoffiles.sort()
+def add_to_database(conn, listoffiles):
     c = conn.cursor()
     filenames = []
     setid = []
@@ -34,7 +26,7 @@ def add_to_db(conn, listoffiles):
         max_set = max(setid) + 1
     for image in listoffiles:
         if image in filenames:
-            print("already in database")
+            pass
         else:
             print('\n' + image)
             is_set = input('Together with previous? (y/n) ')
@@ -59,7 +51,6 @@ def add_to_db(conn, listoffiles):
             new_images = (textname, max_set, size_length, size_width, image)
             c.execute('INSERT INTO images VALUES (?,?,?,?,?)', new_images)
             conn.commit()
-            print(new_images)
 
 
 def create_connection(database):
@@ -72,8 +63,23 @@ def create_connection(database):
     return conn
 
 
+def select_from_database(conn, listoffiles):
+    c = conn.cursor()
+    data = []
+    for filename in listoffiles:
+        filename_tuple = tuple([filename])
+        for row in c.execute(
+                'SELECT * FROM images WHERE (filename) IN (VALUES (?)) ORDER BY filename;',
+                filename_tuple):
+            data.append(row)
+    print(data)
+    # for image in listoffiles:
+    #     print(image)
+
+
 def db_main(listoffiles):
     database = "images.db"
     conn = create_connection(database)
     create_database(conn)
-    add_to_db(conn, listoffiles)
+    add_to_database(conn, listoffiles)
+    select_from_database(conn, listoffiles)
