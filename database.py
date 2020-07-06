@@ -3,7 +3,6 @@ import sqlite3
 
 
 def create_database(conn):
-    # Create table
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS images
                 (currency text, setnr integer, size_length real, size_width real, filename text)'''
@@ -72,9 +71,7 @@ def select_from_database(conn, listoffiles):
                 'SELECT * FROM images WHERE (filename) IN (VALUES (?)) ORDER BY filename;',
                 filename_tuple):
             data.append(row)
-    print(data)
-    # for image in listoffiles:
-    #     print(image)
+    return data
 
 
 def db_main(listoffiles):
@@ -82,4 +79,5 @@ def db_main(listoffiles):
     conn = create_connection(database)
     create_database(conn)
     add_to_database(conn, listoffiles)
-    select_from_database(conn, listoffiles)
+    data = select_from_database(conn, listoffiles)
+    return data

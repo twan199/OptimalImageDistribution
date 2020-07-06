@@ -8,7 +8,8 @@ margins = [25.4, 12.7]  # mm
 def run():
     listofimages = get_images()
     # print(listofimages)
-    database.db_main(listofimages)
+    images = database.db_main(listofimages)
+    print(images)
 
 
 def get_images():
